@@ -8,7 +8,7 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <div className="border-b h-20 flex justify-between items-center font-medium px-10">
+    <div className="border-b h-20 flex justify-between items-center font-medium px-5 md:px-10">
       <Link href="/">
         <Image
           src="/logo-dark.svg"
