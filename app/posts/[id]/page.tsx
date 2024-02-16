@@ -4,6 +4,8 @@ import Link from "next/link";
 import prisma from "@/db";
 import { notFound } from "next/navigation";
 import { ObjectId } from "mongodb";
+import DeleteForm from "@/components/deleteForm";
+import { fetchPost } from "@/actions";
 
 type SinglePostProps = {
   params: {
@@ -12,17 +14,7 @@ type SinglePostProps = {
 };
 
 export default async function SinglePost({ params }: SinglePostProps) {
-  const isValidObjectId = ObjectId.isValid(params.id);
-
-  if (!isValidObjectId) {
-    return notFound();
-  }
-
-  const post: Post | null = await prisma.post.findUnique({
-    where: {
-      id: params.id,
-    },
-  });
+  const post: Post | null = await fetchPost(params.id)
 
   if (!post?.title) {
     return notFound();
@@ -32,7 +24,7 @@ export default async function SinglePost({ params }: SinglePostProps) {
 
   return (
     <div className="w-[90%] md:w-2/3 mx-auto flex flex-col justify-between gap-10">
-      <div className="my-10">
+      <div className="my-10 flex justify-between">
         <Link href="/posts" className="flex gap-3">
           <Image
             src="/back-arrow.svg"
@@ -42,6 +34,10 @@ export default async function SinglePost({ params }: SinglePostProps) {
           />
           All Posts
         </Link>
+        <div className="flex gap-4">
+          <Link href={`/update-post/${post?.id}`} className="grayscale hover:grayscale-0"><Image src={"/pencil-icon.svg"} alt="Edit" width={20} height={20}/></Link>
+          <DeleteForm id={post?.id} />
+        </div>
       </div>
       <div className="flex flex-col text-center space-y-20 justify-center mb-10">
         <h1 className="font-bold text-3xl md:text-4xl">{post?.title}</h1>
