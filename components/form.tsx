@@ -11,7 +11,7 @@ export default function Form({data} : {data: Post | null}) {
   return (
     <>
       <form
-        className="flex flex-col border p-5 w-1/2 gap-5"
+        className="flex flex-col border p-5 lg:w-2/3 gap-5"
         action={async (formData) => {
           const response = defaultData?.title ? await updatePost(formData, defaultData?.id) : await addPost(formData);
           if (response) {
@@ -34,10 +34,10 @@ export default function Form({data} : {data: Post | null}) {
           defaultValue={defaultData?.body}
           required
         ></textarea>
-        <div className="gap-1 grid grid-cols-5 flex-wrap" id="tags">
+        <div className="gap-1 flex flex-wrap" id="tags">
           {tags.map((tag, idx) => (
             <label
-              className="bg-gray-300 px-2 rounded-md custom-label text-center"
+              className="bg-gray-300 px-2 rounded-md custom-label text-center hover:text-white hover:bg-gray-600 cursor-pointer"
               key={idx.toString()}
             >
               <input

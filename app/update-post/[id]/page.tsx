@@ -12,7 +12,7 @@ export default async function UpdatePost({ params }: UpdatePostProps) {
     const post: Post | null = await fetchPost(params.id)
     
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center my-10 px-5">
       <p className="font-bold text-2xl lg:text-4xl mb-10">Update Post</p>
       <Form data={post}/>
     </div>
