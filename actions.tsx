@@ -6,6 +6,14 @@ import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { Post } from "./types";
 
+export const fetchPosts = async () => {
+  const posts : Post[] | null = await prisma.post.findMany({
+    orderBy: {
+      updatedAt: "desc",
+    },
+  });
+  return posts
+}
 export const addPost = async (formData: FormData) => {
   const checkedTags: string[] = [];
 
@@ -90,3 +98,16 @@ export const updatePost = async (formData: FormData, id: string) => {
     return false;
   }
 };
+
+export const filterPosts = async (title : string) => {
+  const posts : Post[] | null = await prisma.post.findMany({
+    where: {
+      title: {
+        contains: title,
+        mode: 'insensitive',
+      },
+    },
+  });
+  console.log(posts)
+  return posts
+}

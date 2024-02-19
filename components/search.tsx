@@ -1,39 +1,23 @@
-"use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-// type SearchProps = {
-//     searchAction: (formData: FormData) => void
-// }
+import { redirect } from "next/navigation";
 
 export default function Search() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const router = useRouter();
-
-  const onSearch = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const encodedSearchQuery = encodeURI(searchQuery);
-    console.log("Current Query", encodedSearchQuery);
-    router.push(`/posts?title=${encodedSearchQuery}`)
-  };
 
   return (
     <form
-      onSubmit={onSearch}
+      action={async (formData) => {
+        "use server"
+        redirect(`/posts?title=${formData.get("title")}`)
+      }}
       className="flex border rounded-md justify-around items-center"
     >
       <input
         type="text"
         name="title"
-        required
-        className="w-full p-5"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        className="w-full py-1 px-5 lg:p-5"
       />
-      <button className="h-full p-5">
+      <button className="h-full py-1 px-5 lg:p-5">
         <Image src={"/search-icon.svg"} alt="Search" width={20} height={20} />
       </button>
     </form>

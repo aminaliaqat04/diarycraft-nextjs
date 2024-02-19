@@ -1,21 +1,35 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Post } from "@/types";
 import Image from "next/image";
-import { deletePost } from "@/actions";
+import { deletePost, fetchPosts, filterPosts } from "@/actions";
 import AddPost from "@/app/add-post/page";
 import DeleteForm from "./deleteForm";
+import { useSearchParams } from "next/navigation";
 
 type PostListProps = {
   postlist: Post[];
 };
 
-export function PostList({ postlist }: PostListProps) {
+// export function PostList({ postlist }: PostListProps) {
+export function PostList() {
   const [draggedPost, setDraggedPost] = useState<Post | null>(null);
   const [dropPost, setDropPost] = useState<Post | null>(null);
-  const [posts, setPosts] = useState<Post[]>(postlist);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const params = useSearchParams()
+  const title = params.get("title")
+
+  useEffect(() => {
+    console.log(title)
+    fetchPostsFromApi()
+  }, [title])
+
+  const fetchPostsFromApi = async () => {
+    const postlist : Post[] | null = title ? await filterPosts(title as string) : await fetchPosts()
+    setPosts(postlist)
+  }
 
   const handleDragStart = (post: Post) => {
     setDraggedPost(post);
@@ -56,8 +70,8 @@ export function PostList({ postlist }: PostListProps) {
 
   return (
     <>
-    <div className="grid grid-cols-1 gap-5" onDrop={handleDrop}>
-      {posts.map((post: Post) => (
+    <div className="flex flex-col lg:w-2/3 gap-5" onDrop={handleDrop}>
+      {posts?.map((post: Post) => (
         <div className="flex gap-5 relative" key={post.id}>
           <Link
             draggable
